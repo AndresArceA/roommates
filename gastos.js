@@ -36,4 +36,12 @@ const deudas = calcularDeudas();
 console.log("Deudas individuales:", deudas);
 
 
+//Esta función calcularDeudas realiza los siguientes pasos:
 
+// Lee los datos de gastos desde el archivo JSON.
+// Lee los datos de roommates desde el archivo JSON.
+// Calcula el total de los gastos.
+// Calcula el promedio de los gastos por roommate.
+// Para cada roommate, calcula la diferencia entre sus gastos totales y el promedio.
+// Devuelve un objeto que contiene las deudas individuales de cada roommate.
+// Este ejemplo asume que en el archivo JSON de gastos, cada gasto tiene una propiedad llamada monto que representa el monto del gasto, y una propiedad llamada roommate que representa el roommate asociado al gasto. Por favor, asegúrate de ajustar el código según la estructura real de tus datos.

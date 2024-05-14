@@ -161,6 +161,18 @@ app.get("/gastos", async (req, res) => {
   }
 });
 
+app.delete("/gasto", async (req, res) => {
+  try {
+    const { id } = req.query;
+    const data = JSON.parse(fs.readFileSync("./data/gastos.json", "utf8"));
+    const filteredData = data.gastos.filter((g) => g.id !== id);
+    fs.writeFileSync("./data/gastos.json", JSON.stringify({ gastos: filteredData }));
+    res.json(filteredData);
+  } catch (error) {
+    console.log("Error: ", error.message);
+    res.status(500).send(error);
+  }
+});
 
 
 

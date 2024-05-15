@@ -93,10 +93,10 @@ const actualizarDeudas = async (deudas) => {
       const nombreRoommate = roommate.nombre;
       const deuda = deudas[nombreRoommate];
       if (deuda > 0) {
-        roommate.recibe = deuda;
+        roommate.recibe = Math.round(deuda);
         roommate.debe = 0;
       } else if (deuda < 0) {
-        roommate.debe = Math.abs(deuda);
+        roommate.debe = Math.abs(Math.round(deuda));
         roommate.recibe = 0;
       } else {
         roommate.debe = 0;

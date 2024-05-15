@@ -118,6 +118,39 @@ const calculo = async () => {
   await actualizarDeudas(deudas);
  };
 
+
+
+//–----------- funciones para consulta
+
+async function actualizarGasto(id, roommate, descripcion, monto) {
+  try {
+    // Lee los datos de gastos desde el archivo JSON
+    const gastosData = JSON.parse(await fs.promises.readFile("./data/gastos.json", "utf8"));
+
+    // Busca el índice del gasto por ID
+    const indexGasto = gastosData.gastos.findIndex((g) => g.id === id);
+
+    if (indexGasto === -1) {
+      // Si no se encuentra el gasto, devuelve un error 404
+      throw new Error("Gasto no encontrado");
+    }
+
+    // Actualiza el gasto con los nuevos datos
+    gastosData.gastos[indexGasto] = { id, roommate, descripcion, monto };
+
+    // Escribe los gastos actualizados en el archivo JSON
+    await fs.promises.writeFile("./data/gastos.json", JSON.stringify(gastosData, null, 2));
+
+    // Calcula las deudas llamando a la función calcularDeudas
+    const deudas = await calcularDeudas();
+    console.log("Deuda Actualizada:", deudas);
+
+    // Retorna el gasto actualizado
+    return gastosData.gastos[indexGasto];
+  } catch (error) {
+    throw error; // Propaga el error para que sea manejado en el bloque try-catch del controlador
+  }
+}
 //exporto las funciones
 
-module.exports = { calculo };
+module.exports = { calculo, actualizarGasto };

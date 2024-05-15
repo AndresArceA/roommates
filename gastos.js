@@ -80,15 +80,15 @@ const calcularDeudas = async () => {
 
 // Función para actualizar las deudas en el archivo roommates.json
 const actualizarDeudas = async (deudas) => {
-  console.log("para actualizar"+deudas);
+  //console.log("para actualizar"+deudas);
   try {
-    // Leer el archivo JSON de roommates
+    // Lee el archivo JSON de roommates
     const data = await fs.readFile("./data/roommates.json", "utf8");
     const roommatesData = JSON.parse(data);
     const roommates = roommatesData.roommates;
     console.log("Roommates antes de actualizar deudas:", roommates);
 
-    // Actualizar las deudas en el objeto roommates
+    // Actualiza las deudas en el objeto roommates
     roommates.forEach((roommate) => {
       const nombreRoommate = roommate.nombre;
       const deuda = deudas[nombreRoommate];
@@ -104,13 +104,15 @@ const actualizarDeudas = async (deudas) => {
       }
     });
 
-    // Escribir los cambios en el archivo JSON
+    // Escribe los cambios en el archivo JSON
     await fs.writeFile("./data/roommates.json", JSON.stringify(roommatesData, null, 2));
     console.log("Deudas actualizadas en el archivo roommates.json");
   } catch (error) {
     console.error("Error al actualizar deudas en roommates:", error.message);
   }
 };
+
+//----- funcion calculo para realizar las operaciones 
 
 const calculo = async () => {
   const deudas = await calcularDeudas();
@@ -148,7 +150,7 @@ async function actualizarGasto(id, roommate, descripcion, monto) {
     // Retorna el gasto actualizado
     return gastosData.gastos[indexGasto];
   } catch (error) {
-    throw error; // Propaga el error para que sea manejado en el bloque try-catch del controlador
+    throw error; // Propaga el error para que sea manejado en el bloque try-catch de la ruta
   }
 }
 //exporto las funciones

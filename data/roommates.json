@@ -5,7 +5,7 @@
       "email": "amelie.duval@example.com",
       "id": "f0c984",
       "total": 0,
-      "recibe": 0,
+      "recibe": 4500,
       "debe": 0
     },
     {
@@ -13,7 +13,7 @@
       "email": "tvorislava.kvasha@example.com",
       "id": "3298ac",
       "total": 0,
-      "debe": 0,
+      "debe": 10500,
       "recibe": 0
     },
     {
@@ -22,13 +22,37 @@
       "id": "5d2e85",
       "total": 0,
       "debe": 0,
-      "recibe": 0
+      "recibe": 39500
     },
     {
       "nombre": "پریا",
       "email": "pry.ysmy@example.com",
       "id": "42545c",
-      "debe": 0,
+      "debe": 10500,
+      "recibe": 0,
+      "total": 0
+    },
+    {
+      "nombre": "Mohammed",
+      "email": "mohammed.blanc@example.com",
+      "id": "b4f46f",
+      "debe": 10500,
+      "recibe": 0,
+      "total": 0
+    },
+    {
+      "nombre": "Duane",
+      "email": "duane.medina@example.com",
+      "id": "ef4620",
+      "debe": 10500,
+      "recibe": 0,
+      "total": 0
+    },
+    {
+      "nombre": "محمد",
+      "email": "mhmd.kmyrn@example.com",
+      "id": "a54070",
+      "debe": 2000,
       "recibe": 0,
       "total": 0
     }

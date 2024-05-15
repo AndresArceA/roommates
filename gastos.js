@@ -1,5 +1,47 @@
 const fs = require("fs").promises;
 
+//funciones para consulta 
+
+// app.put("/gasto", async (req, res) => {
+//   try {
+    
+//     const { id} = req.query; // Obtén el ID del gasto de los parámetros de la ruta
+//     const { roommate, descripcion, monto } = req.body; // Obtén todos los datos del cuerpo de la solicitud
+//     console.log("datos3"+id,roommate,descripcion,monto);
+
+//     // Lee los datos de gastos desde el archivo JSON
+//     const gastosData = JSON.parse(fs.readFileSync("./data/gastos.json", "utf8"));
+
+//     // Busca el índice del gasto por ID
+//     const indexGasto = gastosData.gastos.findIndex((g) => g.id === id);
+
+//     if (indexGasto === -1) {
+//       // Si no se encuentra el gasto, devuelve un error 404
+//       return res.status(404).json({ error: "Gasto no encontrado" });
+//     }
+
+//     // Actualiza el gasto con los nuevos datos
+//     gastosData.gastos[indexGasto] = { id, roommate, descripcion, monto };
+
+//     // Escribe los gastos actualizados en el archivo JSON
+//     fs.writeFileSync("./data/gastos.json", JSON.stringify(gastosData));
+
+//     // Responde con el gasto actualizado
+//     res.json(gastosData.gastos[indexGasto]);
+
+//     // Calcula las deudas llamando a la función calcularDeudas
+//     const deudas = await calcularDeudas();
+//     console.log("Deuda Actualizada:", deudas);
+//   } catch (error) {
+//     console.log("Error:", error.message);
+//     res.status(500).json({ error: "Error interno del servidor" });
+//   }
+// });
+
+
+
+//---Funciones para operar con gastos
+
 const calcularDeudas = async () => {
   try {
     // Leo el archivo JSON de gastos

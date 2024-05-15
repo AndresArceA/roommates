@@ -1,87 +1,81 @@
-const fs = require('fs');
+const fs = require("fs").promises;
 
-function calcularDeudas() {
+const calcularDeudas = async () => {
   try {
-    // Leer el archivo JSON de gastos
-    const gastosData = JSON.parse(fs.readFileSync("./data/gastos.json", "utf8"));
+    // Leo el archivo JSON de gastos
+    const gastosData = JSON.parse(await fs.readFile("./data/gastos.json", "utf8"));
     const gastos = gastosData.gastos;
+    console.log("Gastos:", gastos);
 
-    // Leer el archivo JSON de roommates
-    const roommatesData = JSON.parse(fs.readFileSync("./data/roommates.json", "utf8"));
+    // Leo el archivo JSON de roommates
+    const roommatesData = JSON.parse(await fs.readFile("./data/roommates.json", "utf8"));
     const roommates = roommatesData.roommates;
+    console.log("Roommates:", roommates);
 
-    // Calcular el total de los gastos
+    // Calculo el total de los gastos
     const totalGastos = gastos.reduce((total, gasto) => total + gasto.monto, 0);
+    console.log("Total Gastos:", totalGastos);
 
-    // Calcular el promedio de los gastos por roommate
+    // Calculo el promedio de los gastos por roommate
     const promedioGastos = totalGastos / roommates.length;
+    console.log("Promedio Gastos:", promedioGastos);
 
-    // Calcular las deudas individuales de cada roommate
+    // Calculo las deudas individuales de cada roommate
     const deudas = {};
     roommates.forEach((roommate) => {
-      const gastosRoommate = gastos.filter((gasto) => gasto.roommate === roommate);
+      const gastosRoommate = gastos.filter((gasto) => gasto.roommate === roommate.nombre);
       const totalGastosRoommate = gastosRoommate.reduce((total, gasto) => total + gasto.monto, 0);
-      deudas[roommate] = totalGastosRoommate - promedioGastos;
+      deudas[roommate.nombre] = totalGastosRoommate - promedioGastos;
     });
+    console.log("Deudas:", deudas);
 
     return deudas;
   } catch (error) {
-    console.log("Error: ", error.message);
+    console.log("Error:", error.message);
     return {};
   }
-}
+};
 
-// Ejemplo de uso:
-const deudas = calcularDeudas();
-console.log("Deudas individuales:", deudas);
-
-
-//Esta función calcularDeudas realiza los siguientes pasos:
-
-// Lee los datos de gastos desde el archivo JSON.
-// Lee los datos de roommates desde el archivo JSON.
-// Calcula el total de los gastos.
-// Calcula el promedio de los gastos por roommate.
-// Para cada roommate, calcula la diferencia entre sus gastos totales y el promedio.
-// Devuelve un objeto que contiene las deudas individuales de cada roommate.
-// Este ejemplo asume que en el archivo JSON de gastos, cada gasto tiene una
-//propiedad llamada monto que representa el monto del gasto, y una propiedad
-//llamada roommate que representa el roommate asociado al gasto. 
-//Por favor, asegúrate de ajustar el código según la estructura real de tus datos.
-
-
-function actualizarDeudasEnRoommates(deudas) {
+// Función para actualizar las deudas en el archivo roommates.json
+const actualizarDeudas = async (deudas) => {
+  console.log("para actualizar"+deudas);
   try {
     // Leer el archivo JSON de roommates
-    const roommatesData = JSON.parse(fs.readFileSync("./data/roommates.json", "utf8"));
+    const data = await fs.readFile("./data/roommates.json", "utf8");
+    const roommatesData = JSON.parse(data);
     const roommates = roommatesData.roommates;
+    console.log("Roommates antes de actualizar deudas:", roommates);
 
     // Actualizar las deudas en el objeto roommates
     roommates.forEach((roommate) => {
       const nombreRoommate = roommate.nombre;
-      roommate.recibe = deudas[nombreRoommate];
+      const deuda = deudas[nombreRoommate];
+      if (deuda > 0) {
+        roommate.recibe = deuda;
+        roommate.debe = 0;
+      } else if (deuda < 0) {
+        roommate.debe = Math.abs(deuda);
+        roommate.recibe = 0;
+      } else {
+        roommate.debe = 0;
+        roommate.recibe = 0;
+      }
     });
 
     // Escribir los cambios en el archivo JSON
-    fs.writeFileSync("./data/roommates.json", JSON.stringify(roommatesData, null, 2));
-
+    await fs.writeFile("./data/roommates.json", JSON.stringify(roommatesData, null, 2));
     console.log("Deudas actualizadas en el archivo roommates.json");
   } catch (error) {
-    console.log("Error al actualizar deudas en roommates: ", error.message);
+    console.error("Error al actualizar deudas en roommates:", error.message);
   }
-}
+};
 
-// Esta función actualizarDeudasEnRoommates realiza los siguientes pasos:
+const calculo = async () => {
+  const deudas = await calcularDeudas();
+  console.log("Deudas individuales:", deudas);
+  await actualizarDeudas(deudas);
+ };
 
-// Lee los datos de roommates desde el archivo JSON.
-// Actualiza la propiedad recibe de cada roommate con el valor correspondiente de deudas.
-// Escribe los cambios de vuelta al archivo JSON roommates.json.
-// Puedes llamar a esta función después de haber calculado las deudas individuales de cada roommate usando la función calcularDeudas. Por ejemplo:
+//exporto las funciones
 
-// javascript
-// Copiar código
-// Calcular deudas individuales
-const deudas = calcularDeudas();
-
-// Actualizar deudas en roommates.json
-actualizarDeudasEnRoommates(deudas);
+module.exports = { calculo };

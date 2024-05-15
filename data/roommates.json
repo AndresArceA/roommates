@@ -1,1 +1,36 @@
-{"roommates":[{"nombre":"محیا","email":"mhy.hydry@example.com","id":"65bb16","debe":0,"recibe":0},{"nombre":"Othelia","email":"othelia.berland@example.com","id":"d93c4d","debe":0,"recibe":0},{"nombre":"Thomas","email":"thomas.phillips@example.com","id":"e1d131","debe":0,"recibe":0},{"nombre":"Žarko","email":"zarko.prekovic@example.com","id":"c02c8a","debe":0,"recibe":0},{"nombre":"Leon","email":"leon.bakke@example.com","id":"074a70","debe":0,"recibe":0}]}
+{
+  "roommates": [
+    {
+      "nombre": "Amélie",
+      "email": "amelie.duval@example.com",
+      "id": "f0c984",
+      "total": 0,
+      "recibe": 0,
+      "debe": 0
+    },
+    {
+      "nombre": "Tvorislava",
+      "email": "tvorislava.kvasha@example.com",
+      "id": "3298ac",
+      "total": 0,
+      "debe": 0,
+      "recibe": 0
+    },
+    {
+      "nombre": "Hildegund",
+      "email": "hildegund.meissner@example.com",
+      "id": "5d2e85",
+      "total": 0,
+      "debe": 0,
+      "recibe": 0
+    },
+    {
+      "nombre": "پریا",
+      "email": "pry.ysmy@example.com",
+      "id": "42545c",
+      "debe": 0,
+      "recibe": 0,
+      "total": 0
+    }
+  ]
+}

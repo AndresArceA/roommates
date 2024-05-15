@@ -214,9 +214,7 @@ Articulos de limpieza</textarea
       
         await fetch("http://localhost:3000/gasto", {
           method: "POST",
-          headers: {
-        "Content-Type": "application/json"
-      },
+          headers:{"Content-Type": "application/json"},
           body: JSON.stringify({
             roommate: roommateSelected,
             descripcion: descripcion,

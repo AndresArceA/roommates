@@ -30,6 +30,9 @@ app.use("/js",express.static(path.join(__dirname, "/assets/js")));
 
 //app.use(express.static(path.join(__dirname, "/data")));
 
+//importo Funciones para calcular deudas
+
+const { calcularDeudas, actualizarDeudas, calculo } = require("./gastos.js");
 
 
 //ruta para cargar index.html
@@ -85,6 +88,7 @@ app.post("/roommate", async (req, res) => {
     id: randomid,
     debe: 0,
     recibe: 0,
+    total: 0,
   };
   const {roommates} = JSON.parse(fs.readFileSync("./data/roommates.json", "utf8"));
   roommates.push(roommate);
@@ -130,9 +134,13 @@ app.post("/gasto", (req, res) => {
       descripcion,
       monto,
     });
+      //calculo las deudas llamando a la funcion calcular Deudas
+      const deudas = calculo(gastos);
+      console.log("deuda Actualizada"+deudas);
 
-    // Enviar una respuesta indicando que el gasto se ha almacenado correctamente
+    // Envío una respuesta indicando que el gasto se ha almacenado correctamente
     res.status(200).send("El gasto ha sido almacenado correctamente.");
+  
   } catch (error) {
     // Manejar cualquier error que ocurra durante el proceso
     console.error("Error al manejar la solicitud de gasto:", error);
@@ -146,7 +154,11 @@ app.get("/gastos", async (req, res) => {
     const data = await fs.promises.readFile(path.join(__dirname + '/data/gastos.json')); //leo el archivo json
     const gastos = JSON.parse(data).gastos;
     res.json({gastos});
-    console.log(data.gastoss);
+    console.log(data.gastos);
+     //calculo las deudas llamando a la funcion calcular Deudas
+     const deudas = calculo(gastos);
+     console.log("deuda Actualizada"+deudas);
+    
   } catch (error) {
     if (error.code === "ENOENT") {
       // Error: archivo no encontrado
@@ -168,6 +180,9 @@ app.delete("/gasto", async (req, res) => {
     const filteredData = data.gastos.filter((g) => g.id !== id);
     fs.writeFileSync("./data/gastos.json", JSON.stringify({ gastos: filteredData }));
     res.json(filteredData);
+    //calculo las deudas llamando a la funcion calcular Deudas
+    const deudas = calculo(gastos);
+    console.log("deuda Actualizada"+deudas);
   } catch (error) {
     console.log("Error: ", error.message);
     res.status(500).send(error);

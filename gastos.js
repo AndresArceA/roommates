@@ -225,8 +225,8 @@ async function deleteGasto(id) {
     );
    
     //calculo las deudas llamando a la funcion calcular Deudas
-    const deudas = calculo(filteredData); // asegúrate de que calculo y gastos estén definidos
-    console.log("deuda Actualizada" + deudas);
+    const deudas = await calculo(filteredData); 
+    console.log("Gasto eliminado" + deudas);
     return {
       status: 200,
       message: "Gasto eliminado exitosamente",

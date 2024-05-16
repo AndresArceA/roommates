@@ -237,7 +237,17 @@ Articulos de limpieza</textarea
       const deleteGasto = async (id) => {
         await fetch("http://localhost:3000/gasto?id=" + id, {
           method: "DELETE",
-        });
+        })//agrego codigo para recibir respuesta
+        .then(response => response.json())
+        .then(data => {
+          alert(data.message); // Mostrar el mensaje de respuesta
+          imprimir(); // Actualizar la interfaz después de eliminar el gasto
+  })
+  .catch(error => {
+    console.error("Error al eliminar el gasto:", error);
+    alert("Error al eliminar el gasto. Por favor, intenta de nuevo más tarde.");
+  });
+        
         imprimir();
       };
 

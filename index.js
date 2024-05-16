@@ -102,7 +102,8 @@ app.post("/gasto", (req, res) => {
     const gasta = agregarGasto(roommate, descripcion, monto);
 
     // Envio respuesta
-    res.status(200).send(gasta);
+    res.status(200).json(gasta);
+   
   } catch (error) {
     console.error("Error en la ruta /gasto:", error);
     res.status(500).send("Error interno del servidor.");

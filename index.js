@@ -56,7 +56,7 @@ app.get("/", (req, res) => {
 
 
   
-// Ruta POST /roommate, que genera un roommate
+// Ruta POST /roommate, que genera un roommate -- corregida
 app.post("/roommate", async (req, res) => {
   try {
     //llamo a la funcion para agregar roommate
@@ -70,7 +70,7 @@ app.post("/roommate", async (req, res) => {
 });
  
  
-// Ruta GET /roommates, que devuelve los roomates almacenados
+// Ruta GET /roommates, que devuelve los roomates almacenados --corregida
 app.get("/roommates", async (req, res) => {
   try {
     // Llamo a la función para listar los roommates
@@ -84,74 +84,7 @@ app.get("/roommates", async (req, res) => {
   }
 });
 
-// Ruta GET /roommates, que devuelve los roomates almacenados
-// app.get("/roommates", async (req, res) => {
-//   try {
-//     const data = await fs.promises.readFile(path.join(__dirname + '/data/roommates.json')); //leo el archivo json
-//     const roommates = JSON.parse(data).roommates;
-//     res.json({roommates});
-//     console.log(data.roommates);
-//   } catch (error) {
-//     if (error.code === "ENOENT") {
-//       // Error: archivo no encontrado
-//       console.error('Error: El archivo "Roommates.json" no existe.');
-//       // Informo al usuario sobre cómo crear el archivo
-//       return res.status(404).send('El archivo "Roommates.json" no existe.');
-//     } else {
-//       // Otro tipo de error al leer el archivo
-//       console.error('Error al leer el archivo "Roommates.json":', error);
-//       return res.status(500).send("Error interno del servidor");
-//     }
-//   }
-// });
-
-
-// Ruta POST para manejar la solicitud de gasto
-// app.post("/gasto", (req, res) => {
-//   try {
-//     // Parsear los datos del cuerpo de la solicitud para obtener los detalles del gasto
-//     const { roommate, descripcion, monto } = req.body;
-//     if (!roommate || !descripcion || !monto || isNaN(monto)) {
-//       return res
-//         .status(400)
-//         .send(
-//           "Se requieren los datos roommate, descripcion y monto para agregar un gasto."
-//         );
-//     }
-//     // Creo el ojeto de gasto
-//     const randomid = uuidv4().slice(0, 6);
-//     const Gasto = {
-//       roommate: roommate,
-//       descripcion: descripcion,
-//       monto: parseFloat(monto),
-//       fecha: new Date().toLocaleDateString(),
-//       id: randomid,
-//     };
-//     const { gastos } = JSON.parse(
-//       fs.readFileSync("./data/gastos.json", "utf8")
-//     );
-//     gastos.push(Gasto);
-//     fs.writeFileSync("./data/gastos.json", JSON.stringify({ gastos }));
-//     console.log(Gasto);
-//     res.send({
-//       message: "Se ha agregado un nuevo registro a Gastos.json",
-//       Gasto: Gasto.roommate,
-//       descripcion,
-//       monto,
-//     });
-//       //calculo las deudas llamando a la funcion calcular Deudas
-//       const deudas = calculo(gastos);
-//       console.log("deuda Actualizada"+deudas);
-
-//     // Envío una respuesta indicando que el gasto se ha almacenado correctamente
-//     res.status(200).send("El gasto ha sido almacenado correctamente.");
-  
-//   } catch (error) {
-//     // Manejar cualquier error que ocurra durante el proceso
-//     console.error("Error al manejar la solicitud de gasto:", error);
-//     res.status(500).send("Error interno del servidor al almacenar el gasto.");
-//   }
-// });
+// Ruta POST para manejar la solicitud de gasto --- revisada
 
 app.post("/gasto", (req, res) => {
   try {
@@ -166,10 +99,10 @@ app.post("/gasto", (req, res) => {
     }
 
     // Llamo a la función agregarGasto
-    const gasta = agregarGasto(req, res);
+    const gasta = agregarGasto(roommate, descripcion, monto);
 
     // Envio respuesta
-    //res.send(gasta);
+    res.status(200).send(gasta);
   } catch (error) {
     console.error("Error en la ruta /gasto:", error);
     res.status(500).send("Error interno del servidor.");
@@ -177,13 +110,13 @@ app.post("/gasto", (req, res) => {
 });
 
 
-// Ruta GET /gastos, que devuelve los gastos almacenados
+// Ruta GET /gastos, que devuelve los gastos almacenados -- revisada
 app.get("/gastos", async (req, res) => {
   try {
     // Llamo a la función para listar los gastos
     const lista = await getGastos();
     // Envía respuesta  
-    //res.send(lista);
+    res.status(200).send(lista);
   } catch (error) {
     console.error("Error:", error);
     res.status(500).send({ error: "Error Interno del Servidor" });
@@ -191,11 +124,11 @@ app.get("/gastos", async (req, res) => {
 });
     
 
-// Ruta PUT /gasto para modificar un gasto
+// Ruta PUT /gasto para modificar un gasto  --revisada
 app.put("/gasto", async (req, res) => {
   try {
-    const { id } = req.query; // Obtén el ID del gasto de los parámetros de la ruta
-    const { roommate, descripcion, monto } = req.body; // Obtén todos los datos del cuerpo de la solicitud
+    const { id } = req.query; // Obtiene el ID del gasto de los parámetros de la ruta
+    const { roommate, descripcion, monto } = req.body; // Obtiene todos los datos del cuerpo de la solicitud
     console.log("datos3", id, roommate, descripcion, monto);
 
     // Verifica que el ID del gasto sea válido
@@ -207,7 +140,7 @@ app.put("/gasto", async (req, res) => {
     const resultado = await actualizarGasto(id, roommate, descripcion, monto);
 
     // Envío respuesta
-    //res.send(resultado);
+    res.send(resultado);
     console.log(resultado);
   } catch (error) {
     console.error("Error:", error);
@@ -236,16 +169,17 @@ app.put("/gasto", async (req, res) => {
 
 app.delete("/gasto", async (req, res) => {
   try {
-    const { id } = req.query;
+    const  {id} = req.query;
      // Verifica que el ID del gasto sea válido
      if (!id || typeof id !== "string") {
       return res.status(400).send("El ID del gasto debe ser un valor de tipo string.");
     }
     // Llamo a la función para actualizar el gasto
     const borra = await deleteGasto(id);
+    console.log("Gasto eliminado Exitosamente");
 
     // Envío respuesta
-    //res.send(borra);
+    res.status(200).json(borra);
     console.log(borra);
   } catch (error) {
     console.error("Error:", error);

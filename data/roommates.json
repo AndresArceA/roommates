@@ -1,1 +1,100 @@
-{"roommates":[{"nombre":"Amélie","email":"amelie.duval@example.com","id":"f0c984","total":0,"recibe":7211,"debe":0},{"nombre":"Tvorislava","email":"tvorislava.kvasha@example.com","id":"3298ac","total":0,"debe":0,"recibe":5911},{"nombre":"Hildegund","email":"hildegund.meissner@example.com","id":"5d2e85","total":0,"debe":9089,"recibe":0},{"nombre":"پریا","email":"pry.ysmy@example.com","id":"42545c","debe":9089,"recibe":0,"total":0},{"nombre":"Mohammed","email":"mohammed.blanc@example.com","id":"b4f46f","debe":9089,"recibe":0,"total":0},{"nombre":"Duane","email":"duane.medina@example.com","id":"ef4620","debe":9089,"recibe":0,"total":0},{"nombre":"محمد","email":"mhmd.kmyrn@example.com","id":"a54070","debe":9089,"recibe":0,"total":0},{"nombre":"Florence","email":"florence.anderson@example.com","id":"37895c","debe":0,"recibe":41416,"total":0},{"nombre":"عسل","email":"aasl.kmyrn@example.com","id":"6acf58","debe":9089,"recibe":0,"total":0},{"nombre":"Anthony","email":"anthony.chu@example.com","id":"dce5c5","debe":0,"recibe":0,"total":0},{"nombre":"مرسانا","email":"mrsn.glshn@example.com","id":"d1d683","debe":0,"recibe":0,"total":0}]}
+{
+  "roommates": [
+    {
+      "nombre": "Amélie",
+      "email": "amelie.duval@example.com",
+      "id": "f0c984",
+      "total": 0,
+      "recibe": 384,
+      "debe": 0
+    },
+    {
+      "nombre": "Tvorislava",
+      "email": "tvorislava.kvasha@example.com",
+      "id": "3298ac",
+      "total": 0,
+      "debe": 14616,
+      "recibe": 0
+    },
+    {
+      "nombre": "Hildegund",
+      "email": "hildegund.meissner@example.com",
+      "id": "5d2e85",
+      "total": 0,
+      "debe": 14616,
+      "recibe": 0
+    },
+    {
+      "nombre": "پریا",
+      "email": "pry.ysmy@example.com",
+      "id": "42545c",
+      "debe": 14616,
+      "recibe": 0,
+      "total": 0
+    },
+    {
+      "nombre": "Mohammed",
+      "email": "mohammed.blanc@example.com",
+      "id": "b4f46f",
+      "debe": 13116,
+      "recibe": 0,
+      "total": 0
+    },
+    {
+      "nombre": "Duane",
+      "email": "duane.medina@example.com",
+      "id": "ef4620",
+      "debe": 0,
+      "recibe": 135384,
+      "total": 0
+    },
+    {
+      "nombre": "محمد",
+      "email": "mhmd.kmyrn@example.com",
+      "id": "a54070",
+      "debe": 14616,
+      "recibe": 0,
+      "total": 0
+    },
+    {
+      "nombre": "Florence",
+      "email": "florence.anderson@example.com",
+      "id": "37895c",
+      "debe": 5728,
+      "recibe": 0,
+      "total": 0
+    },
+    {
+      "nombre": "عسل",
+      "email": "aasl.kmyrn@example.com",
+      "id": "6acf58",
+      "debe": 14616,
+      "recibe": 0,
+      "total": 0
+    },
+    {
+      "nombre": "Anthony",
+      "email": "anthony.chu@example.com",
+      "id": "dce5c5",
+      "debe": 14616,
+      "recibe": 0,
+      "total": 0
+    },
+    {
+      "nombre": "مرسانا",
+      "email": "mrsn.glshn@example.com",
+      "id": "d1d683",
+      "debe": 14616,
+      "recibe": 0,
+      "total": 0
+    },
+    {
+      "nombre": "Jonathan",
+      "email": "jonathan.poulsen@example.com",
+      "id": "775828",
+      "debe": 14616,
+      "recibe": 0,
+      "total": 0
+    }
+  ]
+}

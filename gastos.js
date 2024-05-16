@@ -1,21 +1,26 @@
-const fs = require("fs");
+const fs = require("fs").promises;
 const { v4: uuidv4 } = require("uuid");
-
-const path = require("path");
+// const errores = require("./error/Errores.js");
+// const path = require("path");
+// const { error } = require("console");
 
 //---Funciones para operar con gastos
 
 const calcularDeudas = async () => {
   try {
     // Leo el archivo JSON de gastos
-    const gastosData = JSON.parse(await fs.readFile("./data/gastos.json", "utf8"));
+    const gastosData = JSON.parse(
+      await fs.readFile("./data/gastos.json", "utf8")
+    );
     const gastos = gastosData.gastos;
     console.log("Gastos:", gastos);
 
     // Leo el archivo JSON de roommates
-    const roommatesData = JSON.parse(await fs.readFile("./data/roommates.json", "utf8"));
+    const roommatesData = JSON.parse(
+      await fs.readFile("./data/roommates.json", "utf8")
+    );
     const roommates = roommatesData.roommates;
-    console.log("Roommates:", roommates);
+    //console.log("Roommates:", roommates);
 
     // Calculo el total de los gastos
     const totalGastos = gastos.reduce((total, gasto) => total + gasto.monto, 0);
@@ -28,11 +33,16 @@ const calcularDeudas = async () => {
     // Calculo las deudas individuales de cada roommate
     const deudas = {};
     roommates.forEach((roommate) => {
-      const gastosRoommate = gastos.filter((gasto) => gasto.roommate === roommate.nombre);
-      const totalGastosRoommate = gastosRoommate.reduce((total, gasto) => total + gasto.monto, 0);
+      const gastosRoommate = gastos.filter(
+        (gasto) => gasto.roommate === roommate.nombre
+      );
+      const totalGastosRoommate = gastosRoommate.reduce(
+        (total, gasto) => total + gasto.monto,
+        0
+      );
       deudas[roommate.nombre] = totalGastosRoommate - promedioGastos;
     });
-    console.log("Deudas:", deudas);
+    //console.log("Deudas:", deudas);
 
     return deudas;
   } catch (error) {
@@ -49,7 +59,7 @@ const actualizarDeudas = async (deudas) => {
     const data = await fs.readFile("./data/roommates.json", "utf8");
     const roommatesData = JSON.parse(data);
     const roommates = roommatesData.roommates;
-    console.log("Roommates antes de actualizar deudas:", roommates);
+    //console.log("Roommates antes de actualizar deudas:", roommates);
 
     // Actualiza las deudas en el objeto roommates
     roommates.forEach((roommate) => {
@@ -68,29 +78,32 @@ const actualizarDeudas = async (deudas) => {
     });
 
     // Escribe los cambios en el archivo JSON
-    await fs.writeFile("./data/roommates.json", JSON.stringify(roommatesData, null, 2));
-    console.log("Deudas actualizadas en el archivo roommates.json");
+    await fs.writeFile(
+      "./data/roommates.json",
+      JSON.stringify(roommatesData, null, 2)
+    );
+    //console.log("Deudas actualizadas en el archivo roommates.json");
   } catch (error) {
     console.error("Error al actualizar deudas en roommates:", error.message);
   }
 };
 
-//----- funcion calculo para realizar las operaciones 
+//----- funcion calculo para realizar las operaciones
 
 const calculo = async () => {
   const deudas = await calcularDeudas();
   console.log("Deudas individuales:", deudas);
   await actualizarDeudas(deudas);
- };
-
-
+};
 
 //–----------- funciones para consulta
 
 async function actualizarGasto(id, roommate, descripcion, monto) {
   try {
     // Lee los datos de gastos desde el archivo JSON
-    const gastosData = JSON.parse(await fs.promises.readFile("./data/gastos.json", "utf8"));
+    const gastosData = JSON.parse(
+      await fs.readFile("./data/gastos.json", "utf8")
+    );
 
     // Busca el índice del gasto por ID
     const indexGasto = gastosData.gastos.findIndex((g) => g.id === id);
@@ -104,14 +117,20 @@ async function actualizarGasto(id, roommate, descripcion, monto) {
     gastosData.gastos[indexGasto] = { id, roommate, descripcion, monto };
 
     // Escribe los gastos actualizados en el archivo JSON
-    await fs.promises.writeFile("./data/gastos.json", JSON.stringify(gastosData, null, 2));
+    await fs.writeFile(
+      "./data/gastos.json",
+      JSON.stringify(gastosData, null, 2)
+    );
 
     // Calcula las deudas llamando a la función calcularDeudas
     const deudas = await calcularDeudas();
     console.log("Deuda Actualizada:", deudas);
 
     // Retorna el gasto actualizado
-    return { message: "Gasto actualizado con éxito", gasto: gastosData.gastos[indexGasto] };
+    return {
+      message: "Gasto actualizado con éxito",
+      gasto: gastosData.gastos[indexGasto],
+    };
     //return gastosData.gastos[indexGasto];
   } catch (error) {
     throw error; // Propaga el error para que sea manejado en el bloque try-catch de la ruta
@@ -120,39 +139,34 @@ async function actualizarGasto(id, roommate, descripcion, monto) {
 
 // -------funcion para consultar los gastos
 
-const getGastos = async (res) => {
+async function getGastos() {
   try {
-    const data = await fs.promises.readFile(path.join(__dirname + "/data/gastos.json")); // Leo el archivo JSON
-    const gastos = JSON.parse(data).gastos;
-    res.json({gastos});
-    console.log(gastos);
-
+    const data = await fs.readFile("./data/gastos.json", "utf8"); // Leo el archivo JSON
+    const gastos = JSON.parse(data);
+    //console.log(gastos);
     // Calculo las deudas llamando a la función calcular Deudas
     const deudas = calculo(gastos);
     console.log("Deuda Actualizada: " + deudas);
-
+    return gastos;
   } catch (error) {
     if (error.code === "ENOENT") {
       // Error: archivo no encontrado
       console.error('Error: El archivo "gastos.json" no existe.');
       // Informo al usuario sobre cómo crear el archivo
-      return res.status(404).send('El archivo "gastos.json" no existe.');
+      throw new Error('El archivo "gastos.json" no existe.');
     } else {
       // Otro tipo de error al leer el archivo
       console.error('Error al leer el archivo "gastos.json":', error);
-      return res.status(500).send("Error interno del servidor");
+      throw new Error("Error interno del servidor");
     }
   }
-};
+}
 
 //----------funcion para agregar gasto
 
-const agregarGasto = (req, res) => {
+async function agregarGasto(roommate, descripcion, monto) {
   try {
-    // Parsear los datos del cuerpo de la solicitud para obtener los detalles del gasto
-    const { roommate, descripcion, monto } = req.body;
-
-    // Crear el objeto de gasto
+    // Creo el objeto de gasto
     const randomid = uuidv4().slice(0, 6);
     const Gasto = {
       roommate: roommate,
@@ -162,55 +176,73 @@ const agregarGasto = (req, res) => {
       id: randomid,
     };
 
-    // Leer el archivo gastos.json
-    const data = readFileSync("./data/gastos.json", "utf8");
+    // Leo el archivo gastos.json
+    const data = await fs.readFile("./data/gastos.json", "utf8");
     const { gastos } = JSON.parse(data);
-    
-    // Agregar el nuevo gasto
-    gastos.push(Gasto);
-    
-    // Guardar el archivo actualizado
-    fs.writeFileSync("./data/gastos.json", JSON.stringify({ gastos }));
 
-    console.log(Gasto);
-    res.send({
-      message: "Se ha agregado un nuevo registro a Gastos.json",
-      Gasto: Gasto.roommate,
-      descripcion,
-      monto,
-    });
+    // Agrego el nuevo gasto al objeto
+    gastos.push(Gasto);
+    //console.log(Gasto);
+
+    // Guardo el archivo actualizado
+    await fs.writeFile("./data/gastos.json", JSON.stringify({ gastos }));
+
+    //console.log(Gasto);
 
     // Calculo las deudas llamando a la función calcularDeudas
     const deudas = calculo(gastos);
     console.log("Deuda actualizada: " + deudas);
 
     // Envío una respuesta indicando que el gasto se ha almacenado correctamente
-    res.status(200).send("El gasto ha sido almacenado correctamente.");
+    return {
+      message: "Se ha agregado un nuevo registro a Gastos.json",
+      Gasto: Gasto.roommate,
+      descripcion,
+      monto,
+    };
   } catch (error) {
-    // Manejar cualquier error que ocurra durante el proceso
+    // Manejo cualquier error que ocurra durante el proceso
     console.error("Error al manejar la solicitud de gasto:", error);
-    res.status(500).send("Error interno del servidor al almacenar el gasto.");
+    // Devuelve un objeto con el mensaje de error
+    return {
+      status: 500,
+      message: "Error interno del servidor al leer el archivo 'gastos.json',",
+    };
   }
-};
+}
 
 //---------funcion para eliminar un gasto
 
-function deleteGasto(req, res) {
+async function deleteGasto(id) {
   try {
-    const { id } = req.query;
-    const data = JSON.parse(fs.readFileSync("./data/gastos.json", "utf8"));
+    const data = JSON.parse(await fs.readFile("./data/gastos.json", "utf8"));
     const filteredData = data.gastos.filter((g) => g.id !== id);
-    fs.writeFileSync("./data/gastos.json", JSON.stringify({ gastos: filteredData }));
-    res.json(filteredData);
+    await fs.writeFile(
+      "./data/gastos.json",
+      JSON.stringify({ gastos: filteredData })
+    );
+   
     //calculo las deudas llamando a la funcion calcular Deudas
-    const deudas = calculo(gastos); // asegúrate de que calculo y gastos estén definidos
-    console.log("deuda Actualizada"+deudas);
-    res.status(200).json({ message: "Gasto eliminado exitosamente", deudas });
+    const deudas = calculo(filteredData); // asegúrate de que calculo y gastos estén definidos
+    console.log("deuda Actualizada" + deudas);
+    return {
+      status: 200,
+      message: "Gasto eliminado exitosamente",
+      filteredData,
+    };
   } catch (error) {
     console.log("Error: ", error.message);
-    res.status(500).json({ error: "Ha ocurrido un error al eliminar el gasto", message: error.message });
+    throw new Error(
+      "Ha ocurrido un error al eliminar el gasto :" + error.message
+    );
   }
 }
 //exporto las funciones
 
-module.exports = { calculo, actualizarGasto, getGastos, agregarGasto, deleteGasto };
+module.exports = {
+  calculo,
+  actualizarGasto,
+  getGastos,
+  agregarGasto,
+  deleteGasto,
+};

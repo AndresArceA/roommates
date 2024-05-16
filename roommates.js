@@ -39,7 +39,7 @@ const { v4: uuidv4 } = require("uuid");
   async function roomates() {
       const data = await fs.promises.readFile("./data/roommates.json", "utf8"); // leo el archivo json
       const roommates = JSON.parse(data);
-      console.log("roommates :" + JSON.stringify({roommates}));
+      //console.log("roommates :" + JSON.stringify({roommates}));
       return roommates;
   }
     //   if (error.code === "ENOENT") {

@@ -216,7 +216,7 @@ Articulos de limpieza</textarea
         const descripcion = $("#descripcion").val();
         const monto = Number($("#monto").val());
       
-        await fetch("http://localhost:3000/gasto", {
+        const response = await fetch("http://localhost:3000/gasto", {
           method: "POST",
           headers:{"Content-Type": "application/json"},
           body: JSON.stringify({
@@ -226,6 +226,9 @@ Articulos de limpieza</textarea
           }),
          
         });
+        const data = await response.json();
+        console.log(data);
+        alert(JSON.stringify(data));
         
         //alert(roommateSelected,descripcion,monto);
         imprimir();

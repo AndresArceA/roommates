@@ -86,7 +86,7 @@ app.get("/roommates", async (req, res) => {
 
 // Ruta POST para manejar la solicitud de gasto --- revisada
 
-app.post("/gasto", (req, res) => {
+app.post("/gasto", async (req, res) => {
   try {
     // Validar los parámetros de la solicitud
     const { roommate, descripcion, monto } = req.body;
@@ -99,10 +99,11 @@ app.post("/gasto", (req, res) => {
     }
 
     // Llamo a la función agregarGasto
-    const gasta = agregarGasto(roommate, descripcion, monto);
+    const gasta = await agregarGasto(roommate, descripcion, monto);
 
     // Envio respuesta
     res.status(200).json(gasta);
+    console.log("prueba",gasta);
    
   } catch (error) {
     console.error("Error en la ruta /gasto:", error);

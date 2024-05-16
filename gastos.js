@@ -191,15 +191,17 @@ async function agregarGasto(roommate, descripcion, monto) {
 
     // Calculo las deudas llamando a la función calcularDeudas
     const deudas = calculo(gastos);
-    console.log("Deuda actualizada: " + deudas);
+    //console.log("Deuda actualizada: " + JSON.stringify(deudas));
+    console.log("gasto:"+JSON.stringify(Gasto));
 
     // Envío una respuesta indicando que el gasto se ha almacenado correctamente
     return {
-      message: "Se ha agregado un nuevo registro a Gastos.json",
-      Gasto: Gasto.roommate,
-      descripcion,
-      monto,
+      mensaje: `Se ha agregado un nuevo registro a Gastos.json. ${Gasto.roommate} ha registrado un gasto de ${Gasto.monto} por ${Gasto.descripcion} el ${Gasto.fecha}.`
     };
+    // return {
+    //   Mensaje: "Se ha agregado un nuevo registro a Gastos.json",
+    //   Nombre: Gasto.roommate, Monto: Gasto.monto,//JSON.stringify(Gasto)
+    // };
   } catch (error) {
     // Manejo cualquier error que ocurra durante el proceso
     console.error("Error al manejar la solicitud de gasto:", error);

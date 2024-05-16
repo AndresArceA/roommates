@@ -27,11 +27,11 @@ const { v4: uuidv4 } = require("uuid");
       roommates.push(roommate);
       fs.writeFileSync("./data/roommates.json", JSON.stringify({ roommates }));
       console.log(roommate);
-      res.status(201).send({
+      return {status: 200,
         message: "Se ha agregado un nuevo registro a Roommate.json",
         roommate: roommate.nombre,
-      });
-      return roomates;
+      };
+      
     }
   
   //funcion consultar roommates

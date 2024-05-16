@@ -62,10 +62,10 @@ app.post("/roommate", async (req, res) => {
     //llamo a la funcion para agregar roommate
     const room = await addRoommate();
      // Envía respuesta  
-     res.status(200).json({room});
-  } catch (error) {
+     res.status(200).json(room);
+     } catch (error) {
     console.error("Error:", error);
-    res.status(500).send({ error: "Error Interno del Servidor" });
+    res.status(500).send({ status:500, error: "Error Interno del Servidor" });
   }
 });
  
@@ -151,21 +151,6 @@ app.put("/gasto", async (req, res) => {
 
 
 // Ruta DELETE /gasto, para eliminar un gasto
-// app.delete("/gasto", async (req, res) => {
-//   try {
-//     const { id } = req.query;
-//     const data = JSON.parse(fs.readFileSync("./data/gastos.json", "utf8"));
-//     const filteredData = data.gastos.filter((g) => g.id !== id);
-//     fs.writeFileSync("./data/gastos.json", JSON.stringify({ gastos: filteredData }));
-//     res.json(filteredData);
-//     //calculo las deudas llamando a la funcion calcular Deudas
-//     const deudas = calculo(gastos);
-//     console.log("deuda Actualizada"+deudas);
-//   } catch (error) {
-//     console.log("Error: ", error.message);
-//     res.status(500).send(error);
-//   }
-// });
 
 app.delete("/gasto", async (req, res) => {
   try {

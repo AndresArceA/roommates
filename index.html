@@ -202,9 +202,13 @@ Articulos de limpieza</textarea
       const nuevoRoommate = () => {
         fetch("http://localhost:3000/roommate", { method: "POST" })
           .then((res) => res.json())
-          .then(() => {
+          .then((data) => {
+            //muestro la respuesta del servidor
+            alert(JSON.stringify(data));
             imprimir();
+            
           });
+          
       };
 
       const agregarGasto = async () => {
@@ -222,8 +226,10 @@ Articulos de limpieza</textarea
           }),
          
         });
+        
         //alert(roommateSelected,descripcion,monto);
         imprimir();
+        
       };
 
       const deleteGasto = async (id) => {

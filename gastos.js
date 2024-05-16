@@ -1,44 +1,7 @@
-const fs = require("fs").promises;
+const fs = require("fs");
+const { v4: uuidv4 } = require("uuid");
 
-//funciones para consulta 
-
-// app.put("/gasto", async (req, res) => {
-//   try {
-    
-//     const { id} = req.query; // Obtén el ID del gasto de los parámetros de la ruta
-//     const { roommate, descripcion, monto } = req.body; // Obtén todos los datos del cuerpo de la solicitud
-//     console.log("datos3"+id,roommate,descripcion,monto);
-
-//     // Lee los datos de gastos desde el archivo JSON
-//     const gastosData = JSON.parse(fs.readFileSync("./data/gastos.json", "utf8"));
-
-//     // Busca el índice del gasto por ID
-//     const indexGasto = gastosData.gastos.findIndex((g) => g.id === id);
-
-//     if (indexGasto === -1) {
-//       // Si no se encuentra el gasto, devuelve un error 404
-//       return res.status(404).json({ error: "Gasto no encontrado" });
-//     }
-
-//     // Actualiza el gasto con los nuevos datos
-//     gastosData.gastos[indexGasto] = { id, roommate, descripcion, monto };
-
-//     // Escribe los gastos actualizados en el archivo JSON
-//     fs.writeFileSync("./data/gastos.json", JSON.stringify(gastosData));
-
-//     // Responde con el gasto actualizado
-//     res.json(gastosData.gastos[indexGasto]);
-
-//     // Calcula las deudas llamando a la función calcularDeudas
-//     const deudas = await calcularDeudas();
-//     console.log("Deuda Actualizada:", deudas);
-//   } catch (error) {
-//     console.log("Error:", error.message);
-//     res.status(500).json({ error: "Error interno del servidor" });
-//   }
-// });
-
-
+const path = require("path");
 
 //---Funciones para operar con gastos
 
@@ -148,11 +111,106 @@ async function actualizarGasto(id, roommate, descripcion, monto) {
     console.log("Deuda Actualizada:", deudas);
 
     // Retorna el gasto actualizado
-    return gastosData.gastos[indexGasto];
+    return { message: "Gasto actualizado con éxito", gasto: gastosData.gastos[indexGasto] };
+    //return gastosData.gastos[indexGasto];
   } catch (error) {
     throw error; // Propaga el error para que sea manejado en el bloque try-catch de la ruta
   }
 }
+
+// -------funcion para consultar los gastos
+
+const getGastos = async (res) => {
+  try {
+    const data = await fs.promises.readFile(path.join(__dirname + "/data/gastos.json")); // Leo el archivo JSON
+    const gastos = JSON.parse(data).gastos;
+    res.json({gastos});
+    console.log(gastos);
+
+    // Calculo las deudas llamando a la función calcular Deudas
+    const deudas = calculo(gastos);
+    console.log("Deuda Actualizada: " + deudas);
+
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      // Error: archivo no encontrado
+      console.error('Error: El archivo "gastos.json" no existe.');
+      // Informo al usuario sobre cómo crear el archivo
+      return res.status(404).send('El archivo "gastos.json" no existe.');
+    } else {
+      // Otro tipo de error al leer el archivo
+      console.error('Error al leer el archivo "gastos.json":', error);
+      return res.status(500).send("Error interno del servidor");
+    }
+  }
+};
+
+//----------funcion para agregar gasto
+
+const agregarGasto = (req, res) => {
+  try {
+    // Parsear los datos del cuerpo de la solicitud para obtener los detalles del gasto
+    const { roommate, descripcion, monto } = req.body;
+
+    // Crear el objeto de gasto
+    const randomid = uuidv4().slice(0, 6);
+    const Gasto = {
+      roommate: roommate,
+      descripcion: descripcion,
+      monto: parseFloat(monto),
+      fecha: new Date().toLocaleDateString(),
+      id: randomid,
+    };
+
+    // Leer el archivo gastos.json
+    const data = readFileSync("./data/gastos.json", "utf8");
+    const { gastos } = JSON.parse(data);
+    
+    // Agregar el nuevo gasto
+    gastos.push(Gasto);
+    
+    // Guardar el archivo actualizado
+    fs.writeFileSync("./data/gastos.json", JSON.stringify({ gastos }));
+
+    console.log(Gasto);
+    res.send({
+      message: "Se ha agregado un nuevo registro a Gastos.json",
+      Gasto: Gasto.roommate,
+      descripcion,
+      monto,
+    });
+
+    // Calculo las deudas llamando a la función calcularDeudas
+    const deudas = calculo(gastos);
+    console.log("Deuda actualizada: " + deudas);
+
+    // Envío una respuesta indicando que el gasto se ha almacenado correctamente
+    res.status(200).send("El gasto ha sido almacenado correctamente.");
+  } catch (error) {
+    // Manejar cualquier error que ocurra durante el proceso
+    console.error("Error al manejar la solicitud de gasto:", error);
+    res.status(500).send("Error interno del servidor al almacenar el gasto.");
+  }
+};
+
+//---------funcion para eliminar un gasto
+
+function deleteGasto(req, res) {
+  try {
+    const { id } = req.query;
+    const data = JSON.parse(fs.readFileSync("./data/gastos.json", "utf8"));
+    const filteredData = data.gastos.filter((g) => g.id !== id);
+    fs.writeFileSync("./data/gastos.json", JSON.stringify({ gastos: filteredData }));
+    res.json(filteredData);
+    //calculo las deudas llamando a la funcion calcular Deudas
+    const deudas = calculo(gastos); // asegúrate de que calculo y gastos estén definidos
+    console.log("deuda Actualizada"+deudas);
+    res.status(200).json({ message: "Gasto eliminado exitosamente", deudas });
+  } catch (error) {
+    console.log("Error: ", error.message);
+    res.status(500).json({ error: "Ha ocurrido un error al eliminar el gasto", message: error.message });
+  }
+}
 //exporto las funciones
 
-module.exports = { calculo, actualizarGasto };
+module.exports = { calculo, actualizarGasto, getGastos, agregarGasto, deleteGasto };
